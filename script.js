@@ -5,11 +5,9 @@ var sign = {
 
     totalLeds: 150,
 
-    init: function (options) {
-        if (!_.isUndefined(options.totalLeds)) {
-            this.totalLeds = options.totalLeds;
-        }
+    init: function (leds) {
 
+        this.totalLeds = leds;
         ws2801.connect(this.totalLeds);
 
         // Default fill to white
@@ -43,4 +41,4 @@ var sign = {
 
 };
 
-sign.init();
+sign.init(60);
