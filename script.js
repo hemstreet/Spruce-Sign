@@ -32,7 +32,7 @@ var sign = {
     // fill(r, g, b)
     // r, g, b: value as hex (0x00 = 0, 0xFF = 255, 0x7F = 127)
     fill: function (color1, color2, color3) {
-        ws2801.fill(color, color2, color3);
+        ws2801.fill(color1, color2, color3);
         this.update();
     },
     invert: function() {
