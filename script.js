@@ -1,19 +1,17 @@
 var ws2801 = require('rpi-ws2801'),
-    _ = require('underscore');
+         _ = require('underscore');
 
 var sign = {
 
-    totalLeds: 250,
+    totalLeds: 66,
 
-    init: function (leds) {
+    init: function () {
 
-        this.totalLeds = leds;
         ws2801.connect(this.totalLeds);
 
         // Default fill to white
-        ws2801.fill(255, 255, 255);
-
-        ws2801.update();
+        //ws2801.fill(255, 255, 255);
+        this.update();
 
     },
     //Create a pattern that is every other one
@@ -37,12 +35,20 @@ var sign = {
         ws2801.fill(0xFF, 255, 0x00);
         this.update();
     },
+    invert: function() {
+        ws2801.invert();
+    },
+    clear: function() {
+        ws2801.clear();
+    },
     update: function () {
         ws2801.update();
+    },
+    disconnect: function() {
+        ws2801.disconnect();
     }
 
 };
 
-sign.init(60);
-
-sign.dotted([255,255,255], [50,50,50]);
+sign.init();
+sign.dotted([255,0,0], [0,0,255]);
