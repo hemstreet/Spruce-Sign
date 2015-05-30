@@ -3,7 +3,7 @@ var ws2801 = require('rpi-ws2801'),
 
 var sign = {
 
-    totalLeds: 150,
+    totalLeds: 250,
 
     init: function (leds) {
 
@@ -19,7 +19,7 @@ var sign = {
     //Create a pattern that is every other one
     //Acceptable values for each array are : 0 - 255
     //color: array[red, green, blue] e.g [255,0,0]
-    dotted: function (colorType, colorOne, colorTwo) {
+    dotted: function (colorOne, colorTwo) {
         _.times(this.totalLeds, function (i) {
             if (i % 2 == 1) {
                 ws2801.setColor(i, colorOne);
@@ -44,3 +44,5 @@ var sign = {
 };
 
 sign.init(60);
+
+sign.dotted([255,255,255], [50,50,50]);
