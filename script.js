@@ -13,6 +13,8 @@ var sign = {
         // Default fill to white
         ws2801.fill(255, 255, 255);
 
+        ws2801.update();
+
     },
     //Create a pattern that is every other one
     //Acceptable values for each array are : 0 - 255
