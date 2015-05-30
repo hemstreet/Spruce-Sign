@@ -3,14 +3,14 @@ var ws2801 = require('rpi-ws2801'),
 
 var sign = {
 
-    totalLeds: 66,
+    totalLeds: 32,
 
     init: function () {
 
         ws2801.connect(this.totalLeds);
 
         // Default fill to white
-        //ws2801.fill(255, 255, 255);
+        ws2801.fill(255, 255, 255);
         this.update();
 
     },
@@ -31,8 +31,8 @@ var sign = {
     },
     // fill(r, g, b)
     // r, g, b: value as hex (0x00 = 0, 0xFF = 255, 0x7F = 127)
-    fill: function (color) {
-        ws2801.fill(0xFF, 255, 0x00);
+    fill: function (color1, color2, color3) {
+        ws2801.fill(color, color2, color3);
         this.update();
     },
     invert: function() {
@@ -51,4 +51,5 @@ var sign = {
 };
 
 sign.init();
+sign.fill(255,0,255);
 //sign.dotted([255,0,0], [0,0,255]);
