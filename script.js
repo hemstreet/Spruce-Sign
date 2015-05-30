@@ -1,31 +1,46 @@
-var leds = require('rpi-ws2801');
+var ws2801 = require('rpi-ws2801'),
+    _ = require('underscore');
 
-// connecting to Raspberry Pi SPI
-leds.connect(32); // assign number of WS2801 LEDs
+var sign = {
 
-// set all colors to yellow
-console.log("fill all yellow");
-// fill(r, g, b)
-// r, g, b: value as hex (0x00 = 0, 0xFF = 255, 0x7F = 127)
-leds.fill(0xFF, 255, 0x00);
+    totalLeds: 150,
 
-// after 2 seconds set first 6 LEDs to (red, green, blue, red, green, blue)
-setTimeout(function(){
-    console.log("red green blue red green blue");
-    // setRGB(ledIndex, hexColor);
-    // ledIndex: 0 = LED1, 1 = LED2, …
-    // hexColor: '#FF0000' = red, '#00FF00' = green, ...
-    leds.setRGB(0, '#FF0000');    // set LED1 to red
-    leds.setRGB(1, '#00FF00');    // set LED2 to green
-    leds.setRGB(2, '#0000FF');    // set LED3 to blue
+    init: function (options) {
+        if (!_.isUndefined(options.totalLeds)) {
+            this.totalLeds = options.totalLeds;
+        }
 
-    // setColor(ledIndex, color);
-    // ledIndex: 0 = LED1, 1 = LED2, …
-    // color: array[red, green, blue] = [255,0,0] = red, [0,255,0] = green
-    leds.setColor(3, [255,0,0]);  // set LED4 to red
-    leds.setColor(4, [0,255,0]);  // set LED5 to green
-    leds.setColor(5, [0,0,255]);  // set LED6 to blue
+        ws2801.connect(this.totalLeds);
 
-    // send all set colors to SPI via update();
-    leds.update();
-}, 2000);
+        // Default fill to white
+        ws2801.fill(255, 255, 255);
+
+    },
+    //Create a pattern that is every other one
+    //Acceptable values for each array are : 0 - 255
+    //color: array[red, green, blue] e.g [255,0,0]
+    dotted: function (colorType, colorOne, colorTwo) {
+        _.times(this.totalLeds, function (i) {
+            if (i % 2 == 1) {
+                ws2801.setColor(i, colorOne);
+            }
+            else {
+                ws2801.setColor(i, colorTwo);
+            }
+        });
+        this.update();
+
+    },
+    // fill(r, g, b)
+    // r, g, b: value as hex (0x00 = 0, 0xFF = 255, 0x7F = 127)
+    fill: function (color) {
+        ws2801.fill(0xFF, 255, 0x00);
+        this.update();
+    },
+    update: function () {
+        ws2801.update();
+    }
+
+};
+
+sign.init();

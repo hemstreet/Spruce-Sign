@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/hemstreet/Spruce-Sign",
   "dependencies" : {
-    "rpi-ws2801" : "latest"
+    "rpi-ws2801" : "latest",
+    "underscore" : "latest"
   }
 }
