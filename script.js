@@ -51,4 +51,4 @@ var sign = {
 };
 
 sign.init();
-sign.dotted([255,0,0], [0,0,255]);
+//sign.dotted([255,0,0], [0,0,255]);
