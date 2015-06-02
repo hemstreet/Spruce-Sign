@@ -25,6 +25,13 @@ var sign = {
         this.update();
 
     },
+    roll: function() {
+        _(this.totalLeds).times(function(i) {
+            setTimeout(function() {
+                ws2801.setRGB(i, '#FF0000');
+            }, 1000 * i);
+        });
+    },
     runner: function () {
 
             var index = 0,
@@ -71,5 +78,5 @@ var sign = {
 };
 
 sign.init();
-sign.runner();
+sign.roll();
 //sign.dotted([255,0,0], [0,0,255]);
