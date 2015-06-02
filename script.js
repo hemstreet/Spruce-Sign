@@ -8,6 +8,8 @@ var sign = {
     init: function () {
 
         console.log('Connecting', this.totalLeds);
+        //ws2801.spiDevice = '/dev/spidev0.0';
+        ws2801.numLEDs = 100;
         ws2801.connect(this.totalLeds);
 
     },
