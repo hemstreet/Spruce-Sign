@@ -7,6 +7,7 @@ var sign = {
 
     init: function () {
 
+        console.log('Connecting', this.totalLeds);
         ws2801.connect(this.totalLeds);
 
     },
@@ -26,8 +27,11 @@ var sign = {
 
     },
     roll: function() {
+        console.log('Running Roll');
         _(this.totalLeds).times(function(i) {
+            console.log('Setting Timeout', i);
             setTimeout(function() {
+                console.log('Timeout', i);
                 ws2801.setRGB(i, '#FF0000');
                 ws2801.update();
             }, 1000 * i);
