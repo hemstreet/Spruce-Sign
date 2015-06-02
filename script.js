@@ -3,7 +3,7 @@ var ws2801 = require('rpi-ws2801'),
 
 var sign = {
 
-    totalLeds: 32,
+    totalLeds: 100,
 
     init: function () {
 
