@@ -34,12 +34,9 @@ var sign = {
             setTimeout(function() {
                 console.log('Timeout', i);
                 ws2801.setRGB(i, '#FF0000');
+                ws2801.update();
             }, 1000 * i);
         });
-
-        setTimeout(function() {
-            ws2801.update();
-        },1000 * this.totalLeds);
     },
     runner: function () {
 
