@@ -3,13 +3,12 @@ var ws2801 = require('rpi-ws2801'),
 
 var sign = {
 
-    totalLeds: 100,
+    totalLeds: 50,
 
     init: function () {
 
         console.log('Connecting', this.totalLeds);
-        ws2801.spiDevice = '/dev/spidev0.0';
-        ws2801.numLEDs = 100;
+        ws2801.spiDevice = '/dev/spidev0.1';
         ws2801.connect(this.totalLeds);
 
     },
@@ -35,9 +34,12 @@ var sign = {
             setTimeout(function() {
                 console.log('Timeout', i);
                 ws2801.setRGB(i, '#FF0000');
-                ws2801.update();
             }, 1000 * i);
         });
+
+        setTimeout(function() {
+            ws2801.update();
+        },1000 * this.totalLeds);
     },
     runner: function () {
 
