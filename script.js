@@ -97,5 +97,4 @@ var sign = {
 };
 
 sign.init();
-sign.nightTime();
-//sign.dotted([255,0,0], [0,0,255]);
+sign.roll();
