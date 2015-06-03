@@ -22,7 +22,7 @@ var sign = {
 
         socket.on('did-book-appointments', function(){
             this.roll();
-        });
+        }.bind(this));
 
     },
     //Create a pattern that is every other one
