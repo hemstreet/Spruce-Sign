@@ -34,7 +34,7 @@ var sign = {
                 console.log('Timeout', i);
                 ws2801.setColor(i, [this.random(), this.random(), this.random()]);
                 ws2801.update();
-            }, 1000 * i);
+            }.bind(this), 1000 * i);
         });
     },
     runner: function () {
