@@ -42,10 +42,6 @@ var sign = {
                     this.roll();
                 }
 
-                //if(i % 9 == 0) {
-                //    // Delay after every 9 lights, will cause stutter in light roll
-                //    i+= 1;
-                //}
             }.bind(this), 100 * i);
         }.bind(this));
 
@@ -80,7 +76,7 @@ var sign = {
         ws2801.fill(color1, color2, color3);
         //this.update();
     },
-    nightTime: function() {
+    allWhite: function() {
         this.fill(255, 255, 255);
     },
     randomValue: function() {
@@ -112,5 +108,6 @@ if(args.length > 0) {
 }
 else
 {
-    sign.roll();
+    // Sign defaults to
+    sign.allWhite();
 }
