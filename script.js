@@ -8,7 +8,7 @@ var sign = {
 
     init: function () {
 
-        socket = socket('https://192.168.1.14');
+        socket = socket('https://appointments.spruce.me');
 
         console.log('Connecting', this.totalLeds);
 
