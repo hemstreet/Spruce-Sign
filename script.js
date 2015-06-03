@@ -35,7 +35,7 @@ var sign = {
                 ws2801.setColor(i, [this.randomValue(), this.randomValue(), this.randomValue()]);
                 ws2801.update();
             }.bind(this), 1000 * i);
-        });
+        }.bind(this));
     },
     runner: function () {
 
