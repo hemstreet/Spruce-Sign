@@ -1,6 +1,6 @@
 var ws2801 = require('rpi-ws2801'),
     _ = require('underscore'),
-    socket = require('socket.io-client')('https://192.168.1.14');
+    socket = require('socket.io-client');
 
 var sign = {
 
@@ -8,7 +8,10 @@ var sign = {
 
     init: function () {
 
+        socket = socket('https://192.168.1.14');
+
         console.log('Connecting', this.totalLeds);
+
         ws2801.connect(this.totalLeds);
 
         socket.on('connect', function(){
