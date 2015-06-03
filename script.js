@@ -15,6 +15,10 @@ var sign = {
             console.log('connected');
         });
 
+        socket.on('did-book-appointments', function(){
+            console.log('did book appointments');
+        });
+
     },
     //Create a pattern that is every other one
     //Acceptable values for each array are : 0 - 255
