@@ -1,15 +1,19 @@
 var ws2801 = require('rpi-ws2801'),
-    _ = require('underscore');
-
+    _ = require('underscore'),
+    socket = require('socket.io-client')('https://192.168.1.14');
 
 var sign = {
 
-    totalLeds: 100,
+    totalLeds: 75,
 
     init: function () {
 
         console.log('Connecting', this.totalLeds);
         ws2801.connect(this.totalLeds);
+
+        socket.on('connect', function(){
+            console.log('connected');
+        });
 
     },
     //Create a pattern that is every other one
