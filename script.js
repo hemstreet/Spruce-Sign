@@ -32,7 +32,7 @@ var sign = {
             console.log('Setting Timeout', i);
             setTimeout(function() {
                 console.log('Timeout', i);
-                ws2801.setColor(i, [this.random(), this.random(), this.random()]);
+                ws2801.setColor(i, [this.randomValue(), this.randomValue(), this.randomValue()]);
                 ws2801.update();
             }.bind(this), 1000 * i);
         });
@@ -67,7 +67,7 @@ var sign = {
         ws2801.fill(color1, color2, color3);
         this.update();
     },
-    random: function() {
+    randomValue: function() {
         return Math.random() * (255 - 0) + 0;
     },
     invert: function () {
