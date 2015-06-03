@@ -83,5 +83,5 @@ var sign = {
 };
 
 sign.init();
-sign.roll();
+sign.runner();
 //sign.dotted([255,0,0], [0,0,255]);
