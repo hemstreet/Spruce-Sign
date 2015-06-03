@@ -3,7 +3,7 @@ var ws2801 = require('rpi-ws2801'),
 
 var sign = {
 
-    totalLeds: 32,
+    totalLeds: 100,
 
     init: function () {
 
@@ -27,6 +27,7 @@ var sign = {
 
     },
     roll: function() {
+
         console.log('Running Roll');
         _(this.totalLeds).times(function(i) {
             console.log('Setting Timeout', i);
@@ -74,6 +75,9 @@ var sign = {
         ws2801.fill(color1, color2, color3);
         this.update();
     },
+    nightTime: function() {
+        this.fill(0xFF, 255, 0x00);
+    },
     randomValue: function() {
         return Math.random() * (255 - 0) + 0;
     },
@@ -93,5 +97,5 @@ var sign = {
 };
 
 sign.init();
-sign.roll();
+sign.nightTime();
 //sign.dotted([255,0,0], [0,0,255]);
