@@ -3,13 +3,12 @@ var ws2801 = require('rpi-ws2801'),
 
 var sign = {
 
-    totalLeds: 50,
+    totalLeds: 60,
 
     init: function () {
 
         console.log('Connecting', this.totalLeds);
-        ws2801.spiDevice = '/dev/spidev0.1';
-        ws2801.connect(this.totalLeds);
+        ws2801.connect(this.totalLeds, '/dev/spidev0.1');
 
     },
     //Create a pattern that is every other one
