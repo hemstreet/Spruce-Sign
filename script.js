@@ -8,7 +8,7 @@ var sign = {
     init: function () {
 
         console.log('Connecting', this.totalLeds);
-        ws2801.connect(this.totalLeds, '/dev/spidev0.1');
+        ws2801.connect(this.totalLeds, '/dev/spidev0.0');
 
     },
     //Create a pattern that is every other one
