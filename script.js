@@ -32,7 +32,7 @@ var sign = {
             console.log('Setting Timeout', i);
             setTimeout(function() {
                 console.log('Timeout', i);
-                ws2801.setRGB(i, '#FF0000');
+                ws2801.setColor(i, [this.random(), this.random(), this.random()]);
                 ws2801.update();
             }, 1000 * i);
         });
@@ -67,6 +67,9 @@ var sign = {
         ws2801.fill(color1, color2, color3);
         this.update();
     },
+    random: function() {
+        return Math.random() * (255 - 0) + 0;
+    },
     invert: function () {
         ws2801.invert();
     },
@@ -83,5 +86,5 @@ var sign = {
 };
 
 sign.init();
-sign.runner();
+sign.roll();
 //sign.dotted([255,0,0], [0,0,255]);
