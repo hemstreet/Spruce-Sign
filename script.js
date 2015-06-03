@@ -73,10 +73,10 @@ var sign = {
     // r, g, b: value as hex (0x00 = 0, 0xFF = 255, 0x7F = 127)
     fill: function (color1, color2, color3) {
         ws2801.fill(color1, color2, color3);
-        this.update();
+        //this.update();
     },
     nightTime: function() {
-        this.fill(0xFF, 255, 0x00);
+        this.fill(255, 255, 255);
     },
     randomValue: function() {
         return Math.random() * (255 - 0) + 0;
