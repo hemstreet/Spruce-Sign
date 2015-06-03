@@ -1,6 +1,7 @@
 var ws2801 = require('rpi-ws2801'),
     _ = require('underscore');
 
+
 var sign = {
 
     totalLeds: 100,
@@ -101,4 +102,15 @@ var sign = {
 };
 
 sign.init();
-sign.roll();
+
+// Do we have any custom commands to run?
+var args = process.argv.slice(2);
+
+if(args.length > 0) {
+    // We have passed a custom command, lets make sure we call that
+    sign[args[0]]()
+}
+else
+{
+    sign.roll();
+}
