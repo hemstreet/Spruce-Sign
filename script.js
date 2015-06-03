@@ -21,7 +21,7 @@ var sign = {
         });
 
         socket.on('did-book-appointments', function(){
-            console.log('did book appointments');
+            this.roll();
         });
 
     },
@@ -91,7 +91,7 @@ var sign = {
     // r, g, b: value as hex (0x00 = 0, 0xFF = 255, 0x7F = 127)
     fill: function (color1, color2, color3) {
         ws2801.fill(color1, color2, color3);
-        //this.update();
+        //this.update();d
     },
     allWhite: function() {
         this.fill(255, 255, 255);
