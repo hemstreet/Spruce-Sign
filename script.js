@@ -3,7 +3,7 @@ var ws2801 = require('rpi-ws2801'),
 
 var sign = {
 
-    totalLeds: 60,
+    totalLeds: 150,
 
     init: function () {
 
@@ -34,7 +34,7 @@ var sign = {
                 console.log('Timeout', i);
                 ws2801.setColor(i, [this.randomValue(), this.randomValue(), this.randomValue()]);
                 ws2801.update();
-            }.bind(this), 1000 * i);
+            }.bind(this), 100 * i);
         }.bind(this));
     },
     runner: function () {
