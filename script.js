@@ -35,7 +35,7 @@ var sign = {
                 ws2801.setColor(i, [this.randomValue(), this.randomValue(), this.randomValue()]);
                 ws2801.update();
 
-                if(i == this.totalLeds) {
+                if(i == (this.totalLeds - 1)) {
                     console.log('Re-running roll');
                     this.roll();
                 }
