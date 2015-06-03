@@ -49,6 +49,7 @@ var sign = {
 
                 if(i == (this.totalLeds - 1)) {
                     if(this.currentLoop < this.loops) {
+                        this.currentLoop++;
                         this.roll();
                     }
                     else
