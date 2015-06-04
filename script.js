@@ -115,7 +115,7 @@ var sign = {
         this.fill(0,255,0);
     },
     defaultColor: function() {
-      this.allRed();
+      this.allBlue();
     },
     randomValue: function() {
         return Math.random() * (255 - 0) + 0;
