@@ -12,8 +12,6 @@ var sign = {
 
         socket = socket('https://appointments.spruce.me');
 
-        console.log('Connecting', this.totalLeds);
-
         ws2801.connect(this.totalLeds);
 
         socket.on('connect', function(){

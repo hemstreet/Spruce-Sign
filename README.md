@@ -1,8 +1,10 @@
-WS2801 Resources
+Setup SPI Pins
 == 
-https://github.com/andrewmunsell/PiFX/blob/master/server.js
-https://www.andrewmunsell.com/blog/raspberry-pi-leds
-http://zeitwesendiylog.spreitzer.at/?p=147
+Follow the instructions, after reboot run `sudo raspi-config`, go to advanced options and enable SPI pins.
+
+Once everything is up and running you can run `node script.js` to run the default allWhite or you can pass an argument to
+the script like `node script.js roll` to run the roll command after its init'ed. this can be useful to run
+`node script.js clear` to turn all of the lights off.
 
 Node Cron
 ==
