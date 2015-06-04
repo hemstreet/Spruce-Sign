@@ -4,7 +4,7 @@ var ws2801 = require('rpi-ws2801'),
 
 var sign = {
 
-    totalLeds: 75,
+    totalLeds: 250,
     loops: 5, // number of times to run the light loops i.e. for appointments booked
     currentLoop: 0,
 
@@ -40,18 +40,23 @@ var sign = {
     },
     roll: function() {
 
+        console.log('calling roll');
         _(this.totalLeds).times(function(i) {
             setTimeout(function() {
+                console.log('setting timeout', i);
                 ws2801.setColor(i, [this.randomValue(), this.randomValue(), this.randomValue()]);
                 ws2801.update();
 
                 if(i == (this.totalLeds - 1)) {
+
                     if(this.currentLoop < this.loops) {
+                        console.log('incrementing loop', this.currentLoop);
                         this.currentLoop++;
                         this.roll();
                     }
                     else
                     {
+                        console.log('filling with white');
                         this.currentLoop = 0;
                         this.allWhite();
                     }
@@ -93,6 +98,7 @@ var sign = {
     },
     allWhite: function() {
         this.fill(255, 255, 255);
+        this.update();
     },
     randomValue: function() {
         return Math.random() * (255 - 0) + 0;
@@ -118,8 +124,13 @@ sign.init();
 var args = process.argv.slice(2);
 
 if(args.length > 0) {
+    sign.allWhite();
+
     // We have passed a custom command, lets make sure we call that
-    sign[args[0]]()
+    setTimeout(function() {
+        sign[args[0]]()
+    }, 5000);
+
 }
 else
 {
