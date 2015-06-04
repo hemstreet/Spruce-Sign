@@ -40,6 +40,10 @@ var sign = {
     },
     roll: function() {
 
+        if(this.currentLoop = 0) {
+            this.clear();
+        }
+
         console.log('calling roll');
         _(this.totalLeds).times(function(i) {
             setTimeout(function() {
