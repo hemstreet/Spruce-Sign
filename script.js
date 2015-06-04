@@ -57,7 +57,7 @@ var sign = {
                     }
                 }
 
-            }.bind(this), 100 * i);
+            }.bind(this), 10 * i);
         }.bind(this));
 
     },
