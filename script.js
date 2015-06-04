@@ -62,7 +62,7 @@ var sign = {
                     {
                         console.log('filling with white');
                         this.currentLoop = 0;
-                        this.allWhite();
+                        this.defaultColor();
                     }
                 }
 
@@ -104,6 +104,13 @@ var sign = {
         this.fill(255, 255, 255);
         this.update();
     },
+    allBlue: function() {
+        this.fill(0, 0, 255);
+        this.update();
+    },
+    defaultColor: function() {
+      this.allBlue();
+    },
     randomValue: function() {
         return Math.random() * (255 - 0) + 0;
     },
@@ -128,7 +135,7 @@ sign.init();
 var args = process.argv.slice(2);
 
 if(args.length > 0) {
-    sign.allWhite();
+    sign.defaultColor();
 
     // We have passed a custom command, lets make sure we call that
     setTimeout(function() {
@@ -139,5 +146,5 @@ if(args.length > 0) {
 else
 {
     // Sign defaults to
-    sign.allWhite();
+    sign.defaultColor();
 }
