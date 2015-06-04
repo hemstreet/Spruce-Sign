@@ -108,8 +108,14 @@ var sign = {
         this.fill(0, 0, 255);
         this.update();
     },
+    allRed: function() {
+        this.fill(255,0,0);
+    },
+    allGreen: function() {
+        this.fill(0,255,0);
+    },
     defaultColor: function() {
-      this.allBlue();
+      this.allRed();
     },
     randomValue: function() {
         return Math.random() * (255 - 0) + 0;
