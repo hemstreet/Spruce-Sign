@@ -5,7 +5,7 @@ var ws2801 = require('rpi-ws2801'),
 var sign = {
 
     totalLeds: 75,
-    loops: 2, // number of times to run the light loops i.e. for appointments booked
+    loops: 5, // number of times to run the light loops i.e. for appointments booked
     currentLoop: 0,
 
     init: function () {
