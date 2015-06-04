@@ -40,7 +40,7 @@ var sign = {
     },
     roll: function() {
 
-        if(this.currentLoop = 0) {
+        if(this.currentLoop == 0) {
             this.clear();
         }
 
