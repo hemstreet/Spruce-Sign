@@ -15,6 +15,9 @@ var sign = {
 
         ws281x.init(this.totalLeds);
 
+        // Make sure we are at our default state
+        this.defaultColor();
+
         socket = socket('https://appointments.spruce.me');
 
         socket.on('connect', function () {
@@ -95,7 +98,6 @@ var sign = {
         ws281x.reset();
     },
     update: function () {
-        //console.log('in update', this.pixelData);
         ws281x.render(this.pixelData);
     }
 };
@@ -104,9 +106,6 @@ sign.init();
 
 // Do we have any custom commands to run?
 var args = process.argv.slice(2);
-
-// Make sure we are at our default state
-sign.defaultColor();
 
 if (args.length > 0) {
     // We have passed a custom command, lets make sure we call that
