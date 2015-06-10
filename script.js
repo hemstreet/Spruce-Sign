@@ -6,14 +6,13 @@ var sign = {
 
     totalLeds: 85,
     intervalDelay: 10000, // Time in milliseconds for interval delays to run
-    rainbowSpeed: 250,
+    rainbowSpeed: 1,
     pixelData: null,
 
     init: function () {
 
         this.pixelData = new Uint32Array(this.totalLeds);
 
-        console.log('init with', this.totalLeds);
         ws281x.init(this.totalLeds);
 
         socket = socket('https://appointments.spruce.me');
@@ -34,7 +33,7 @@ var sign = {
 
         var interval = setInterval(function () {
             _(this.totalLeds).times(function(i) {
-                this.pixelData[i] = sign.colorWheel((offset + i) % 256);
+                this.pixelData[i] = this.colorWheel((offset + i) % 256);
             }.bind(this));
 
             offset = (offset + 1) % 256;
@@ -106,18 +105,12 @@ sign.init();
 // Do we have any custom commands to run?
 var args = process.argv.slice(2);
 
+// Make sure we are at our default state
+sign.defaultColor();
+
 if (args.length > 0) {
-
-    // Make sure we are at our default state
-    sign.defaultColor();
-
     // We have passed a custom command, lets make sure we call that
     setTimeout(function () {
         sign[args[0]]()
     }, 2500);
-
-}
-else {
-    // Sign defaults to
-    sign.defaultColor();
 }
