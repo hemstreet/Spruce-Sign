@@ -1,138 +1,104 @@
-var ws2801 = require('rpi-ws2801'),
+var ws281x = require('rpi-ws281x-native'),
     _ = require('underscore'),
     socket = require('socket.io-client');
 
 var sign = {
 
-    totalLeds: 100,
-    loops: 5, // number of times to run the light loops i.e. for appointments booked
-    currentLoop: 0,
+    totalLeds: 85,
+    intervalDelay: 10000, // Time in milliseconds for interval delays to run
+    rainbowSpeed: 250,
+    pixelData: null,
 
     init: function () {
 
+        this.pixelData = new Uint32Array(this.totalLeds);
+
+        console.log('init with', this.totalLeds);
+        ws281x.init(this.totalLeds);
+
         socket = socket('https://appointments.spruce.me');
 
-        ws2801.connect(this.totalLeds);
-
-        socket.on('connect', function(){
+        socket.on('connect', function () {
             console.log('connected');
         });
 
-        socket.on('did-book-appointments', function(){
-            this.roll();
+        socket.on('did-book-appointments', function () {
+            this.rainbow();
         }.bind(this));
 
     },
-    //Create a pattern that is every other one
-    //Acceptable values for each array are : 0 - 255
-    //color: array[red, green, blue] e.g [255,0,0]
-    dotted: function (colorOne, colorTwo) {
-        _.times(this.totalLeds, function (i) {
-            if (i % 2 == 1) {
-                ws2801.setColor(i, colorOne);
-            }
-            else {
-                ws2801.setColor(i, colorTwo);
-            }
-        });
-        this.update();
+    rainbow: function () {
+
+        console.log('running rainbow');
+        var offset = 0;
+
+        var interval = setInterval(function () {
+            _(this.totalLeds).times(function(i) {
+                this.pixelData[i] = sign.colorWheel((offset + i) % 256);
+            }.bind(this));
+
+            offset = (offset + 1) % 256;
+            this.update();
+        }.bind(this), this.rainbowSpeed);
+
+        setTimeout(function() {
+            clearInterval(interval);
+            this.defaultColor();
+        }.bind(this), this.intervalDelay);
+
 
     },
-    roll: function() {
-
-        if(this.currentLoop == 0) {
-            this.clear();
+    colorWheel: function (pos) {
+        pos = 255 - pos;
+        if (pos < 85) {
+            return this.rgb2Int(255 - pos * 3, 0, pos * 3);
         }
-
-        console.log('calling roll');
-        _(this.totalLeds).times(function(i) {
-            setTimeout(function() {
-                console.log('setting timeout', i);
-                ws2801.setColor(i, [this.randomValue(), this.randomValue(), this.randomValue()]);
-                ws2801.update();
-
-                if(i == (this.totalLeds - 1)) {
-
-                    if(this.currentLoop < this.loops) {
-                        console.log('incrementing loop', this.currentLoop);
-                        this.currentLoop++;
-                        this.roll();
-                    }
-                    else
-                    {
-                        console.log('filling with white');
-                        this.currentLoop = 0;
-                        this.defaultColor();
-                    }
-                }
-
-            }.bind(this), 10 * i);
-        }.bind(this));
-
+        else if (pos < 170) {
+            pos -= 85;
+            return this.rgb2Int(0, pos * 3, 255 - pos * 3);
+        }
+        else {
+            pos -= 170;
+            return this.rgb2Int(pos * 3, 255 - pos * 3, 0);
+        }
     },
-    runner: function () {
-
-            var index = 0,
-            i = 1,
-            ri = 1,
-            r = 0;
-
-        setInterval(function () {
-
-            ws2801.setColor(index, [r, 0, 255]);
-            r += ri;
-            index += i;
-            ws2801.update();
-
-            if (r >= 255 || r <= 0) {
-                ri *= -1;
-            }
-
-            if (index >= this.totalLeds || index <= 0) {
-                i *= -1;
-            }
-        }, 10);
-
+    rgb2Int: function (r, g, b) {
+        return ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
     },
     // fill(r, g, b)
-    // r, g, b: value as hex (0x00 = 0, 0xFF = 255, 0x7F = 127)
-    fill: function (color1, color2, color3) {
-        ws2801.fill(color1, color2, color3);
-        //this.update();d
+    // r, g, b: value as 0 - 255
+    fill: function (r, g, b) {
+
+        _(this.totalLeds).times(function(i) {
+
+            this.pixelData[i] = this.rgb2Int(r,g,b);
+
+        }.bind(this));
+
+        this.update();
     },
-    allWhite: function() {
+    allWhite: function () {
         this.fill(255, 255, 255);
-        this.update();
     },
-    allBlue: function() {
+    allBlue: function () {
         this.fill(0, 0, 255);
-        this.update();
     },
-    allRed: function() {
-        this.fill(255,0,0);
+    allRed: function () {
+        this.fill(255, 0, 0);
     },
-    allGreen: function() {
-        this.fill(0,255,0);
+    allGreen: function () {
+        this.fill(0, 255, 0);
     },
-    defaultColor: function() {
-      this.allBlue();
-    },
-    randomValue: function() {
-        return Math.random() * (255 - 0) + 0;
-    },
-    invert: function () {
-        ws2801.invert();
+    defaultColor: function () {
+        this.allWhite();
     },
     clear: function () {
-        ws2801.clear();
+        ws281x.reset();
     },
     update: function () {
-        ws2801.update();
-    },
-    disconnect: function () {
-        ws2801.disconnect();
+        //console.log('in update', this.pixelData);
+        ws281x.render(this.pixelData);
     }
-
 };
 
 sign.init();
@@ -140,17 +106,18 @@ sign.init();
 // Do we have any custom commands to run?
 var args = process.argv.slice(2);
 
-if(args.length > 0) {
+if (args.length > 0) {
+
+    // Make sure we are at our default state
     sign.defaultColor();
 
     // We have passed a custom command, lets make sure we call that
-    setTimeout(function() {
+    setTimeout(function () {
         sign[args[0]]()
-    }, 5000);
+    }, 2500);
 
 }
-else
-{
+else {
     // Sign defaults to
     sign.defaultColor();
 }
