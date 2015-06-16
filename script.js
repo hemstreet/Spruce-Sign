@@ -4,10 +4,18 @@ var ws281x = require('rpi-ws281x-native'),
 
 var sign = {
 
-    totalLeds: 85,
-    intervalDelay: 10000, // Time in milliseconds for interval delays to run
+    totalLeds: 815,
+    intervalRainbow: 10000, // Time in milliseconds for booked appointment to run
     rainbowSpeed: 1,
     pixelData: null,
+    intervalCycle: null,
+    currentColorIndex: 0,
+    cycleDelay: 250,
+    colors : [
+        "255,0,0",
+        "0,255,0",
+        "0,0,255"
+    ],
 
     init: function () {
 
@@ -16,7 +24,9 @@ var sign = {
         ws281x.init(this.totalLeds);
 
         // Make sure we are at our default state
-        this.defaultColor();
+        //this.defaultColor();
+
+        this.cycleColors();
 
         socket = socket('https://appointments.spruce.me');
 
@@ -31,7 +41,6 @@ var sign = {
     },
     rainbow: function () {
 
-        console.log('running rainbow');
         var offset = 0;
 
         var interval = setInterval(function () {
@@ -46,7 +55,7 @@ var sign = {
         setTimeout(function() {
             clearInterval(interval);
             this.defaultColor();
-        }.bind(this), this.intervalDelay);
+        }.bind(this), this.intervalRainbow);
 
 
     },
@@ -63,6 +72,27 @@ var sign = {
             pos -= 170;
             return this.rgb2Int(pos * 3, 255 - pos * 3, 0);
         }
+    },
+    cycleColors : function() {
+        this.intervalCycle = setInterval(function() {
+
+            this.rotateColor();
+
+        }.bind(this), this.cycleDelay);
+    },
+
+    rotateColor: function() {
+
+        this.fill(this.colors[this.currentColorIndex]);
+
+        if(this.currentColorIndex >= this.colors.length) {
+            this.currentColorIndex = 0;
+        }
+        else
+        {
+            this.currentColorIndex++;
+        }
+
     },
     rgb2Int: function (r, g, b) {
         return ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
@@ -96,6 +126,9 @@ var sign = {
     },
     clear: function () {
         ws281x.reset();
+    },
+    clearCycleInterval: function() {
+        clearInterval(this.intervalCycle);
     },
     update: function () {
         ws281x.render(this.pixelData);
