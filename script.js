@@ -12,8 +12,9 @@ var sign = {
     currentColorIndex: 0,
     cycleDelay: 250,
     colors : [
+        "255,255,255",
         "255,0,0",
-        "0,255,0",
+        "255,255,255",
         "0,0,255"
     ],
 
@@ -101,6 +102,7 @@ var sign = {
     // r, g, b: value as 0 - 255
     fill: function (r, g, b) {
 
+        console.log('called fill');
         _(this.totalLeds).times(function(i) {
 
             this.pixelData[i] = this.rgb2Int(r,g,b);
