@@ -7,15 +7,17 @@ var sign = {
     totalLeds: 815,
     intervalRainbow: 10000, // Time in milliseconds for booked appointment to run
     rainbowSpeed: 1,
+    rainbowDuration: 5000,
     pixelData: null,
     intervalCycle: null,
+    intervalFade: null,
     currentColorIndex: 0,
-    cycleDelay: 250,
+    cycleDelay: 2500,
+    colorFadeDuration: 1000,
     colors : [
-        "255,255,255",
-        "255,0,0",
-        "255,255,255",
-        "0,0,255"
+        [255,0,0],
+        [0,255,0],
+        [0,0,255]
     ],
 
     init: function () {
@@ -24,16 +26,14 @@ var sign = {
 
         ws281x.init(this.totalLeds);
 
-        // Make sure we are at our default state
-        //this.defaultColor();
-
-        this.cycleColors();
+        this.allGreen();
 
         socket = socket('https://appointments.spruce.me');
 
         socket.on('connect', function () {
             console.log('connected');
-        });
+            this.cycleColors();
+        }.bind(this));
 
         socket.on('did-book-appointments', function () {
             this.rainbow();
@@ -44,19 +44,25 @@ var sign = {
 
         var offset = 0;
 
+        this.stop();
+
         var interval = setInterval(function () {
+
             _(this.totalLeds).times(function(i) {
                 this.pixelData[i] = this.colorWheel((offset + i) % 256);
             }.bind(this));
 
             offset = (offset + 1) % 256;
             this.update();
+
         }.bind(this), this.rainbowSpeed);
 
         setTimeout(function() {
-            clearInterval(interval);
+            this.stop();
             this.defaultColor();
-        }.bind(this), this.intervalRainbow);
+        }.bind(this), this.rainbowDuration);
+
+        this.intervalRainbow = interval;
 
 
     },
@@ -75,6 +81,10 @@ var sign = {
         }
     },
     cycleColors : function() {
+
+        this.stop();
+        this.rotateColor();
+
         this.intervalCycle = setInterval(function() {
 
             this.rotateColor();
@@ -84,15 +94,25 @@ var sign = {
 
     rotateColor: function() {
 
-        this.fill(this.colors[this.currentColorIndex]);
+        //var colors = this.colors[this.currentColorIndex].split(','),
+        var start   = {},
+            end     = {};
 
-        if(this.currentColorIndex >= this.colors.length) {
+        start.r = this.colors[this.currentColorIndex][0];
+        start.g = this.colors[this.currentColorIndex][1];
+        start.b = this.colors[this.currentColorIndex][2];
+
+        if(this.currentColorIndex >= (this.colors.length - 1)) {
             this.currentColorIndex = 0;
-        }
-        else
-        {
+        } else {
             this.currentColorIndex++;
         }
+
+        end.r = this.colors[this.currentColorIndex][0];
+        end.g = this.colors[this.currentColorIndex][1];
+        end.b = this.colors[this.currentColorIndex][2];
+
+        this.fade(start, end, this.colorFadeDuration);
 
     },
     rgb2Int: function (r, g, b) {
@@ -102,7 +122,6 @@ var sign = {
     // r, g, b: value as 0 - 255
     fill: function (r, g, b) {
 
-        console.log('called fill');
         _(this.totalLeds).times(function(i) {
 
             this.pixelData[i] = this.rgb2Int(r,g,b);
@@ -110,6 +129,36 @@ var sign = {
         }.bind(this));
 
         this.update();
+    },
+
+    stop: function () {
+
+        clearInterval(this.intervalCycle);
+        clearInterval(this.intervalFade);
+        clearInterval(this.intervalRainbow);
+
+    },
+    // linear interpolation between two values a and b
+    // u controls amount of a/b and is in range [0.0,1.0]
+    getInterpolation :function(a,b,u) {
+        return (1-u) * a + u * b;
+    },
+    fade :function(start, end, duration) {
+        var interval = 10,
+            steps = duration/interval,
+            step_u = 1.0/steps,
+            u = 0.0,
+            theInterval = setInterval(function(){
+                if (u >= 1.0){ clearInterval(theInterval) }
+                var r = parseInt(this.getInterpolation(start.r, end.r, u)),
+                    g = parseInt(this.getInterpolation(start.g, end.g, u)),
+                    b = parseInt(this.getInterpolation(start.b, end.b, u));
+                this.fill(r,g,b);
+                u += step_u;
+            }.bind(this), interval);
+
+        this.intervalFade = theInterval;
+
     },
     allWhite: function () {
         this.fill(255, 255, 255);
@@ -124,14 +173,12 @@ var sign = {
         this.fill(0, 255, 0);
     },
     defaultColor: function () {
-        this.allWhite();
+        this.cycleColors();
     },
     clear: function () {
         ws281x.reset();
     },
-    clearCycleInterval: function() {
-        clearInterval(this.intervalCycle);
-    },
+
     update: function () {
         ws281x.render(this.pixelData);
     }
