@@ -19,6 +19,7 @@
   "dependencies" : {
     "rpi-ws281x-native" : "latest",
     "underscore" : "latest",
-    "socket.io-client" : "latest"
+    "socket.io-client" : "latest",
+    "iotdb-timers" : "latest"
   }
 }

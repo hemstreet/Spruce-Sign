@@ -1,6 +1,7 @@
 var ws281x = require('rpi-ws281x-native'),
     _ = require('underscore'),
-    socket = require('socket.io-client');
+    socket = require('socket.io-client'),
+    timers = require('iotdb-timers');
 
 var sign = {
 
@@ -14,6 +15,8 @@ var sign = {
     currentColorIndex: 0,
     cycleDelay: 5000,
     colorFadeDuration: 1000,
+    sunRiseHour : null,
+    sunsetHour: null,
     colors : [
         [255,255,255],
         [255,0,0],
@@ -40,6 +43,14 @@ var sign = {
             this.stop();
             this.rainbow();
         }.bind(this));
+
+        var lat = 39.7392,
+            lon = -104.9903;
+
+        timers.setLocation(lat , lon);
+
+        timers.sunset(this.defaultColor());
+        timers.sunrise(this.stop());
 
     },
     rainbow: function () {
@@ -175,8 +186,8 @@ var sign = {
     allGreen: function () {
         this.fill(0, 255, 0);
     },
-    allOrange: function() {
-        this.fill(170, 50, 0);
+    customColor: function() {
+        this.fill(255,215,0);
     },
     defaultColor: function () {
         this.cycleColors();
