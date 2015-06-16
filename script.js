@@ -5,18 +5,19 @@ var ws281x = require('rpi-ws281x-native'),
 var sign = {
 
     totalLeds: 815,
-    intervalRainbow: 10000, // Time in milliseconds for booked appointment to run
+    intervalRainbow: null,
     rainbowSpeed: 1,
-    rainbowDuration: 5000,
+    rainbowDuration: 30000, // Time in milliseconds for booked appointment to run
     pixelData: null,
     intervalCycle: null,
     intervalFade: null,
     currentColorIndex: 0,
-    cycleDelay: 2500,
+    cycleDelay: 5000,
     colorFadeDuration: 1000,
     colors : [
+        [255,255,255],
         [255,0,0],
-        [0,255,0],
+        [255,255,255],
         [0,0,255]
     ],
 
@@ -36,6 +37,7 @@ var sign = {
         }.bind(this));
 
         socket.on('did-book-appointments', function () {
+            this.stop();
             this.rainbow();
         }.bind(this));
 
@@ -43,8 +45,6 @@ var sign = {
     rainbow: function () {
 
         var offset = 0;
-
-        this.stop();
 
         var interval = setInterval(function () {
 
@@ -82,7 +82,7 @@ var sign = {
     },
     cycleColors : function() {
 
-        this.stop();
+        //this.stop();
         this.rotateColor();
 
         this.intervalCycle = setInterval(function() {
@@ -94,7 +94,6 @@ var sign = {
 
     rotateColor: function() {
 
-        //var colors = this.colors[this.currentColorIndex].split(','),
         var start   = {},
             end     = {};
 
@@ -121,6 +120,10 @@ var sign = {
     // fill(r, g, b)
     // r, g, b: value as 0 - 255
     fill: function (r, g, b) {
+
+        r = Math.abs(r);
+        g = Math.abs(g);
+        b = Math.abs(b);
 
         _(this.totalLeds).times(function(i) {
 
@@ -172,13 +175,15 @@ var sign = {
     allGreen: function () {
         this.fill(0, 255, 0);
     },
+    allOrange: function() {
+        this.fill(170, 50, 0);
+    },
     defaultColor: function () {
         this.cycleColors();
     },
     clear: function () {
         ws281x.reset();
     },
-
     update: function () {
         ws281x.render(this.pixelData);
     }
@@ -192,6 +197,7 @@ var args = process.argv.slice(2);
 if (args.length > 0) {
     // We have passed a custom command, lets make sure we call that
     setTimeout(function () {
+        sign.stop();
         sign[args[0]]()
-    }, 2500);
+    }.bind(this), 2500);
 }
