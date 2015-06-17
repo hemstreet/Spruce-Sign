@@ -9,6 +9,13 @@ Once everything is up and running you can run `node script.js` to run the defaul
 the script like `node script.js roll` to run the roll command after its init'ed. this can be useful to run
 `node script.js clear` to turn all of the lights off.
 
-Node Cron
-==
-https://github.com/ncb000gt/node-cron
+Config
+===
+Create file in `config/config.json` 
+
+```
+{
+  "url" : "http://url.to.websocket.com"
+}
+
+```

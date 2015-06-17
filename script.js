@@ -20,6 +20,7 @@ var sign = {
         [255,255,255],
         [0,0,255]
     ],
+    config : require('./config/config.json'),
 
     init: function () {
 
@@ -27,9 +28,11 @@ var sign = {
 
         ws281x.init(this.totalLeds);
 
+        this.config = JSON.parse(this.config);
+
         this.allGreen();
 
-        socket = socket('https://appointments.spruce.me');
+        socket = socket(this.config.url);
 
         socket.on('connect', function () {
             console.log('connected');
