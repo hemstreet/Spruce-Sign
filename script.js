@@ -7,10 +7,11 @@ var sign = {
     totalLeds: 100,
     loops: 5, // number of times to run the light loops i.e. for appointments booked
     currentLoop: 0,
+    config : JSON.parse(equire('./config/config.json')),
 
     init: function () {
 
-        socket = socket('https://appointments.spruce.me');
+        socket = socket(this.config.url);
 
         ws2801.connect(this.totalLeds);
 
