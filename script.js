@@ -1,7 +1,7 @@
 var ws281x = require('rpi-ws281x-native'),
     _ = require('underscore'),
     socket = require('socket.io-client'),
-    timers = require('iotdb-timers');
+    crontab = require('node-crontab');
 
 var sign = {
 
@@ -23,16 +23,19 @@ var sign = {
         [255,255,255],
         [0,0,255]
     ],
+    config: require('./config/config.json'),
 
     init: function () {
 
         this.pixelData = new Uint32Array(this.totalLeds);
 
+        this.config = JSON.parse(this.config);
+
         ws281x.init(this.totalLeds);
 
         this.allGreen();
 
-        socket = socket('https://appointments.spruce.me');
+        socket = socket(this.config.url);
 
         socket.on('connect', function () {
             console.log('connected');
@@ -52,6 +55,13 @@ var sign = {
         timers.sunset(this.defaultColor());
         timers.sunrise(this.stop());
 
+    },
+    isDay: function() {
+        this.stop();
+        this.allOff();
+    },
+    isNight: function() {
+        this.defaultColor();
     },
     rainbow: function () {
 
@@ -186,8 +196,8 @@ var sign = {
     allGreen: function () {
         this.fill(0, 255, 0);
     },
-    customColor: function() {
-        this.fill(255,215,0);
+    allOff: function () {
+        this.fill(0,0,0);
     },
     defaultColor: function () {
         this.cycleColors();
