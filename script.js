@@ -23,7 +23,7 @@ var sign = {
         [255,255,255],
         [0,0,255]
     ],
-    config: JSON.parse(require('./config/config.json')),
+    config: require('./config/config.json'),
 
     init: function () {
 
