@@ -20,15 +20,13 @@ var sign = {
         [255,255,255],
         [0,0,255]
     ],
-    config : require('./config/config.json'),
+    config : JSON.parse(require('./config/config.json')),
 
     init: function () {
 
         this.pixelData = new Uint32Array(this.totalLeds);
 
         ws281x.init(this.totalLeds);
-
-        this.config = JSON.parse(this.config);
 
         this.allGreen();
 
