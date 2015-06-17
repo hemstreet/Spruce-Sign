@@ -7,7 +7,7 @@ var sign = {
     totalLeds: 100,
     loops: 5, // number of times to run the light loops i.e. for appointments booked
     currentLoop: 0,
-    config : JSON.parse(equire('./config/config.json')),
+    config : JSON.parse(require('./config/config.json')),
 
     init: function () {
 
